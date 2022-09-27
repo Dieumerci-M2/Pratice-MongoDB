@@ -12,7 +12,5 @@ module.exports = {
             return callback(err)
         })
     },
-    getDb: ()=>{
-
-    }
+    getDb: ()=> dbConnexion 
 }
