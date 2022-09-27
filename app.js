@@ -1,3 +1,4 @@
+const { ObjectID } = require('bson');
 const expess = require('express')
 const {connectToDb, getDb} = require('./db')
 
@@ -18,6 +19,10 @@ connectToDb ((err)=>{
 
 // Routres
 
+app.get('/',(req,res)=>{
+    res.send('hello Mongo 🖐️')
+})
+
 app.get('/books',(req, res)=>{ 
 
     db.collection('books')
@@ -34,6 +39,19 @@ app.get('/books',(req, res)=>{
         res.status(500).json({error : `Server could not respond`})
     })
 })
-app.get('/',(req,res)=>{
-    res.send('hello Mongo 🖐️')
+
+app.get('/books/:id', (req, res)=>{
+    if(ObjectID.isValid(req.params.id)){
+        db.collection('books')
+        .findOne({_id: ObjectID(req.params.id)})
+        .then(doc => {
+            res.status(200).json(doc)
+        })
+        .catch((err)=>{
+            res.status(500).json({error: `Server could not respond`})
+        })
+    }
+    else{
+        res.status(500).json({error: `Not a valid Id`})
+    }
 })
