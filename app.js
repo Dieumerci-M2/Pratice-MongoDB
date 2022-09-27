@@ -79,3 +79,21 @@ app.post('/books', (req, res)=>{
         res.status(500).json({err: `Can't add a element in DB`})
     })
 })
+
+// Delete Endpoint
+
+app.delete('/books/:id', (req, res)=>{
+    if(ObjectID.isValid(req.params.id)){
+        db.collection('books')
+        .deleteOne({_id: ObjectID(req.params.id)})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch((err)=>{
+            res.status(500).json({error: `Could not delete element`})
+        })
+    }
+    else{
+        res.status(500).json({error: `Not a valid Id`})
+    }
+})
