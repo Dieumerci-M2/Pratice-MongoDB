@@ -4,9 +4,15 @@ const {connectToDb, getDb} = require('./db')
 // init app & middleware
 
 const app = expess()
-
-app.listen(3000, ()=>{
-    console.log(`app is lestening by port 3000 and you can get it on: http://localhost:${3000}`)
+// Data base connexion
+let dataBase
+connectToDb ((err)=>{
+    if(!err){
+        app.listen(3000, ()=>{
+            console.log(`app is lestening by port 3000 and you can get it on: http://localhost:${3000}`)
+        })
+        dataBase = getDb();
+    }
 })
 
 // Routres
