@@ -5,7 +5,10 @@ const {connectToDb, getDb} = require('./db')
 // init app & middleware
 
 const app = expess()
+app.use(expess.json())
+
 // Data base connexion
+
 let db;
 let books = []
 connectToDb ((err)=>{
@@ -17,11 +20,14 @@ connectToDb ((err)=>{
     }
 })
 
-// Routres
+// Routes
+// Racine route 
 
 app.get('/',(req,res)=>{
     res.send('hello Mongo 🖐️')
 })
+
+// Data Base route
 
 app.get('/books',(req, res)=>{ 
 
@@ -40,6 +46,8 @@ app.get('/books',(req, res)=>{
     })
 })
 
+// Show One Element on my DB by passing his Id on parameter
+
 app.get('/books/:id', (req, res)=>{
     if(ObjectID.isValid(req.params.id)){
         db.collection('books')
@@ -54,4 +62,20 @@ app.get('/books/:id', (req, res)=>{
     else{
         res.status(500).json({error: `Not a valid Id`})
     }
+})
+
+// Post Endepoint 
+
+app.post('/books', (req, res)=>{
+
+    const book = req.body
+    
+    db.collection('books')
+    .insertOne(book)
+    .then(result =>{
+        res.status(201).json(result)
+    })
+    .catch(err=>{
+        res.status(500).json({err: `Can't add a element in DB`})
+    })
 })
