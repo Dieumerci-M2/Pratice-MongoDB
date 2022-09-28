@@ -97,3 +97,23 @@ app.delete('/books/:id', (req, res)=>{
         res.status(500).json({error: `Not a valid Id`})
     }
 })
+
+// Update an element on DB
+
+app.patch('/books/:id', (req, res)=>{
+    const update = req.body
+
+    if(ObjectID.isValid(req.params.id)){
+        db.collection('books')
+        .updateOne({_id: ObjectID(req.params.id)}, {$set:update})
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch((err)=>{
+            res.status(500).json({error: `Could not Update  element`})
+        })
+    }
+    else{
+        res.status(500).json({error: `Not a valid Id`})
+    }
+})
